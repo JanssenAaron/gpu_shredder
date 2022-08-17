@@ -77,7 +77,15 @@ def energy_used_parser(string):
     return strip_n_from_values(string, 1)
 
 def gpu_duration_parser(string):
-    return strip_n_from_values(string, 3)
+
+    output = strip_n_from_values(string, 3)
+    for key, value in output.items():
+        if value.endswith("s"):
+            output[key] = float(value[0:-1])/60/60
+        if value.endswith("m"):
+            output[key] = float(value[0:-1])/60 
+    return(output)
+        
 
 def util_parser(string):
     return strip_n_from_values(string, 1)
@@ -186,7 +194,7 @@ if __name__ == "__main__":
     engine.execute("use testjob")    
 
     #alchemy_class_gpu_usage.metadata.create_all(engine)
-    #alchemy_class_sql_job.metadata.create_all(engine)    
+    alchemy_class_sql_job.metadata.create_all(engine)    
 
     with Session(engine) as session:
         session.add_all(real_jobs)
