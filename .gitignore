@@ -1,9 +1,6 @@
 venv/*
 venv
-20220815
 .vscode
-__*
-testdata.txt
+__pycache__
+__pycache__/*
 .gitignore
-fieldNames.txt
-*.pyc

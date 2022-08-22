@@ -1,13 +1,14 @@
 import re
 import os
+import sys
 
-from sqlalchemy import inspect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import relationship
-from classes import Job, gpu_usage, sql_job
-from classes import alchemy_class_sql_job, alchemy_class_gpu_usage, getBase
+
+dependency_path = os.path.abspath( __file__ )
+sys.path.append(dependency_path)
+
+from classes import Job, gpu_usage, sql_job, getBase
 
 
 field_names = ["account=",
@@ -253,7 +254,8 @@ def get_sql_objs_from_dir(dirname):
     usages = []
     for filename in os.listdir(dirname):
         if re.match(r"2[0-9]{7}", filename):
-            tmp_jobs , tmp_usages = _get_sql_objs_from_file(filename)
+            tmp_jobs , tmp_usages = _get_sql_objs_from_file(accounting_file_location+"/"+filename)
+
             jobs += tmp_jobs
             usages += tmp_usages
     return (jobs, usages)
@@ -261,11 +263,12 @@ def get_sql_objs_from_dir(dirname):
 
 
 # Constants
-accounting_file_location = "./"
+accounting_file_location = "/home/ccastdev/shredder"
 connection_string="mysql://root:password@10.105.141.84"
 
 # Main execution
 if __name__ == "__main__":
+
     # gets sql_objs
     jobs, usages = get_sql_objs_from_dir(accounting_file_location)
     real_jobs = []
@@ -298,7 +301,7 @@ if __name__ == "__main__":
 
         for usage in real_usages:
             session.merge(usage)
-            
+
         session.commit()
 
 
