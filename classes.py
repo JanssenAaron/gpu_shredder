@@ -6,6 +6,13 @@ from sqlalchemy import String
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
+# Used to get the sql alchemy metadata of the classes in this file
+def getBase():
+    return Base
+
+# This is the class that sql alchemy uses to contruct the table and its objects represent records in that table
+
+# This objects of this class should be gotten from sql_job.export_to_alchemy() method
 
 class alchemy_class_sql_job(Base):
     __tablename__ = "jobs"
@@ -19,6 +26,7 @@ class alchemy_class_sql_job(Base):
     endtime = Column(Integer)       # Timestamp
     used_walltime = Column(Integer) # Secs
 
+# Used to store info about jobs that is shared across nodes
 class sql_job:
 
     def __init__(self, id, job_obj):
@@ -35,11 +43,13 @@ class sql_job:
                 endtime = self.endtime
         )
 
-    def __repr__(self):
-        return (self.job_id + ";" + self.ngpus + ";" + self.endtime + ";" + self.starttime)
+
+# This is the class that sql alchemy uses to construct the table and its objects represent records in that table
+
+# This objects of this class should be gotten from gpu_usage.export_to_alchemy() method
 
 class alchemy_class_gpu_usage(Base):
-    __tablename__ = "gpuUsageStats"
+    __tablename__ = "gpu_metrics"
 
     job_id = Column(String(100), primary_key=True)
     node_name_and_gpu_number = Column(String(100), primary_key=True)
@@ -52,8 +62,10 @@ class alchemy_class_gpu_usage(Base):
     energy_used = Column(Float)               # Watt
     gpu_duration = Column(Float)              # hrs
 
+# This class is used to store a node's gpu's metrics for one job
+# This is used for pre database code
 class gpu_usage:
-
+    # List of keys that MUST be in the dictonary passed into the init method
     valid_keys = [
         "GPU_memoryClock_average_per_node_gpu",
         "GPU_memoryUtilization_maxValue_per_node_gpu",
@@ -68,6 +80,7 @@ class gpu_usage:
         self.node_name_and_gpu_number = id
         self.load_dict(dict)
         
+    # Returns a sql alchemly compatiable object 
     def export_to_alchemy(self):
         return alchemy_class_gpu_usage(
             job_id = self.job_id,
@@ -81,9 +94,9 @@ class gpu_usage:
             energy_used = self.energy_used,
             gpu_duration = self.gpu_duration
         )
-
+    # Set members from a dictonary
     def load_dict(self, dict):
-        if len(dict) != 9:
+        if len(dict) != len(gpu_usage.valid_keys) + 1: # 1 for id
             raise Exception("The number of expected metrics does not match the actual")
         self.job_id         =  dict["jobid"]
         self.mem_clock_avg  =  dict["GPU_memoryClock_average_per_node_gpu"]
@@ -107,7 +120,15 @@ class gpu_usage:
                 self.energy_used + ";" + \
                 self.gpu_duration
 
+
+
+# A class for data parsing of the accounting logs
 class Job():
+
+
+
+    # The ID must be a valid pbs jobid and the data_dict should be a dictionary representation of the accounting log E record
+    # associated with the job, with the Resource_List and resources_used stored as sub dictionaries  
     def __init__(self, id, data_dict):
         # Theses keys must be in the data_dict
         required_keys = [
@@ -122,7 +143,7 @@ class Job():
                            ]
     
         self.jobid = id
-
+        # Checks for keys
         for key in required_keys:
             if key not in data_dict:
                 raise KeyError("Missing " + key + " in data")
