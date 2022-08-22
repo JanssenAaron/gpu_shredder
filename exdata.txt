@@ -1,8 +1,0 @@
-{'GPU_energyConsumed_per_node_gpu': '33.85',
- 'GPU_maxGpuMemoryUsed_per_node_gpu': '14.33',
- 'GPU_memoryClock_average_per_node_gpu': '715',
- 'GPU_memoryUtilization_maxValue_per_node_gpu': '22',
- 'GPU_smClock_average_per_node_gpu': '1478',
- 'GPU_smUtilization_average_per_node_gpu': '99',
- 'GPU_memoryUtilization_average_per_node_gpu': '11',
- 'GPU_duration_per_node_gpu': '1.29'}

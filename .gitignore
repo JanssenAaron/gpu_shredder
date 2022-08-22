@@ -3,3 +3,7 @@ venv
 20220815
 .vscode
 __*
+testdata.txt
+.gitignore
+fieldNames.txt
+*.pyc
