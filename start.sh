@@ -1,4 +1,5 @@
 #!/bin/bash
-source /home/ccastdev/shredder/venv/bin/activate
-python /home/ccastdev/shredder/getdata.py
+install_dir=""
+source $install_dir/venv/bin/activate
+python $install_dir/getdata.py
 

@@ -11,6 +11,12 @@ sys.path.append(dependency_path)
 from classes import Job, gpu_usage, sql_job, getBase
 
 
+
+# Constants
+accounting_file_location = "/home/ccastdev/shredder"
+connection_string="mysql://root:password@10.105.141.84"
+
+
 field_names = ["account=",
 "accounting_id=",
 "alt_id=",
@@ -262,9 +268,6 @@ def get_sql_objs_from_dir(dirname):
 
 
 
-# Constants
-accounting_file_location = "/home/ccastdev/shredder"
-connection_string="mysql://root:password@10.105.141.84"
 
 # Main execution
 if __name__ == "__main__":
