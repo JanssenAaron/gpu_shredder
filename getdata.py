@@ -12,7 +12,7 @@ from classes import Job, gpu_usage, sql_job, getBase
 
 
 
-# Constants
+# Installation parameters
 accounting_file_location = "/home/ccastdev/shredder"
 connection_string="mysql://root:password@10.105.141.84"
 
